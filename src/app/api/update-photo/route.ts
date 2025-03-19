@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/app/lib/supabase";
+import { getToday } from "@/utils/getToday";
 
 // 사용할 테마 배열
 const gifThemes = ["funny", "reaction", "meme"];
@@ -31,7 +32,7 @@ export async function POST() {
         .url;
 
     // 5️⃣ Supabase에 저장할 데이터 생성
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD 형식
+    const today = getToday(); // YYYY-MM-DD 형식
 
     // 6️⃣ Supabase에 저장 (기존 데이터 덮어쓰기)
     const { error } = await supabase

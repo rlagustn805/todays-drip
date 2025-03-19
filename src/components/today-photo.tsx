@@ -7,7 +7,7 @@ export default async function TodayPhoto() {
   return (
     <div>
       {photo ? (
-        <div className="relative w-full h-96">
+        <div className="relative w-full h-96 rounded-lg">
           <Image
             src={photo.url}
             alt="오늘의 짤"
