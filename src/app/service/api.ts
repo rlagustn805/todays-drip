@@ -1,5 +1,6 @@
 import { TablesInsert } from "@/types/supabase";
 
+// 오늘의 짤 가져오기
 export async function getTodayPhoto() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/photo`);
 
@@ -10,6 +11,44 @@ export async function getTodayPhoto() {
   return res.json();
 }
 
+// 댓글 조회하기
+export async function getComments(
+  photoId: string,
+  page: number = 1,
+  type?: "top3"
+) {
+  if (!photoId) {
+    return { success: false, message: "photoId 필요" };
+  }
+
+  const queryParams = new URLSearchParams({ photoId, page: page.toString() });
+
+  if (type) queryParams.append("type", type);
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments?${queryParams.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
+
+    const { data, totalCount } = await res.json();
+
+    if (!res.ok) {
+      return { success: false, message: data.message || "댓글 조회 실패" };
+    }
+
+    return { success: true, data, totalCount };
+  } catch (e) {
+    return { success: false, message: "네트워크 에러가 발생하였습니다." };
+  }
+}
+
+// 댓글 등록하기
 export async function addComment(
   photoId: string,
   nickname: string,

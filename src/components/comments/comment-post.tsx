@@ -32,12 +32,14 @@ export default function CommentPost() {
   }
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full gap-3">
+      <p className="text-lg font-bold m-auto">드립 남기기</p>
       <Input
         placeholder="닉네임 (12자 이내)"
         maxLength={12}
         value={nickname}
         onChange={(e) => setNickname(e.target.value)}
+        required
       />
       <Input
         type="password"
@@ -45,6 +47,7 @@ export default function CommentPost() {
         maxLength={15}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        required
       />
 
       <textarea
@@ -53,6 +56,7 @@ export default function CommentPost() {
         maxLength={40}
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        required
       />
       <Button onClick={() => addHandleComment()} disabled={loading}>
         {loading ? "등록 중..." : "등록하기"}

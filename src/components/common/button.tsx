@@ -6,11 +6,11 @@ export default function Button({
   children,
   ...props
 }: ButtonType) {
-  const baseStyles = "text-white p-2 rounded-lg cursor-pointer";
+  const baseStyles = "p-2 rounded-lg cursor-pointer disabled:opacity-50";
 
   const colorStyles = {
-    purple:
-      "bg-purple-500  hover:bg-purple-600 active:bg-purple-700 disabled:bg-purple-300",
+    purple: "text-white bg-purple-500 hover:bg-purple-600 active:bg-purple-700",
+    gray: "bg-gray-300 text-black",
   };
 
   return (
