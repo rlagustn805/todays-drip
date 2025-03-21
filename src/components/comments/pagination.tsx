@@ -18,13 +18,13 @@ export default function Pagination({
       </Button>
 
       <span className="px-4 py-2 font-bold">
-        페이지 {page} / {totalPages}
+        페이지 {page} / {totalPages + 1}
       </span>
 
       <Button
         color="gray"
         onClick={() => onPageChange(page + 1)}
-        disabled={page === totalPages}>
+        disabled={page >= totalPages}>
         다음 ▶
       </Button>
     </div>

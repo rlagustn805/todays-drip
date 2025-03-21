@@ -87,3 +87,68 @@ export async function addComment(
     return { success: false, message: "네트워크 에러가 발생하였습니다." };
   }
 }
+
+// 댓글 비밀번호 검증하기
+
+export async function verifyPassword(id: number, password: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments/${id}/verify`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    }
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    return { success: false, message: data.message || "비밀번호 검증 실패" };
+  }
+
+  return { success: true, message: data.message };
+}
+
+// 댓글 수정하기
+export async function updateComment(
+  id: number,
+  content: string,
+  password: string
+) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments/${id}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password, content }),
+    }
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    return { success: false, message: data.message || "댓글 수정 실패" };
+  }
+
+  return { success: true, message: data.message };
+}
+
+// 댓글 삭제하기
+export async function deleteComment(id: number, password: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments/${id}`,
+    {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    }
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    return { success: false, message: data.message || "댓글 삭제 실패" };
+  }
+
+  return { success: true, message: data.message };
+}
