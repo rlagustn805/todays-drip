@@ -164,6 +164,7 @@ export async function toggleLike(commentId: number) {
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments/${commentId}/like`,
     {
       method: "POST",
+      // 임시
       headers: {
         "x-forwarded-for": "192.168.0.123",
       },
@@ -177,4 +178,22 @@ export async function toggleLike(commentId: number) {
   }
 
   return { success: true, message: data.message, liked: data.liked };
+}
+
+// 지난 드립왕 보기 (TOP 10)
+export async function getTopTenDrip() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/history`, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    return { success: false, data };
+  }
+
+  return { success: true, data };
 }
