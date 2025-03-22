@@ -1,6 +1,7 @@
 import CommentsContainer from "@/components/comments/comments-container";
 import MenuBar from "@/components/menu-bar";
 import TodayPhoto from "@/components/today-photo";
+import UpdatePhotoButton from "@/components/updatePhoto";
 import { getToday } from "@/utils/getToday";
 
 export default async function Home() {
@@ -15,6 +16,8 @@ export default async function Home() {
         <p>{today}일, 오늘의 짤</p>
       </div>
       <TodayPhoto />
+      <UpdatePhotoButton />
+
       <CommentsContainer />
     </div>
   );

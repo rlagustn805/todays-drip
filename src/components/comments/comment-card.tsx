@@ -7,6 +7,7 @@ import {
   deleteComment,
   updateComment,
   verifyPassword,
+  toggleLike,
 } from "@/app/service/api";
 import Input from "../common/input";
 
@@ -18,6 +19,7 @@ export default function CommentCard({
   const [mode, setMode] = useState<"read" | "edit" | "auth">("read");
   const [inputPassword, setInputPassword] = useState("");
   const [editContent, setEditContent] = useState(comment.content);
+  const [likes, setLikes] = useState(comment.likes);
 
   const handleVerify = async (action: "edit" | "delete") => {
     const res = await verifyPassword(comment.id, inputPassword);
@@ -47,6 +49,16 @@ export default function CommentCard({
       toast.success("수정 완료");
       onUpdate(comment.id, editContent);
       setMode("read");
+    } else {
+      toast.error(res.message);
+    }
+  };
+
+  const handleLike = async () => {
+    const res = await toggleLike(comment.id);
+    if (res.success) {
+      toast.success(res.message);
+      setLikes((prev) => (res.liked ? prev + 1 : Math.max(prev - 1, 0)));
     } else {
       toast.error(res.message);
     }
@@ -119,7 +131,10 @@ export default function CommentCard({
       className="bg-purple-400 rounded-lg p-2 flex flex-col gap-1.5">
       <div className="text-sm flex justify-between items-center">
         <span>{comment.nickname}</span>
-        <span className="px-1 py-0.5 bg-amber-50 rounded-lg cursor-pointer text-black">
+        <span
+          role="none"
+          className="px-1 py-0.5 bg-amber-50 rounded-lg cursor-pointer text-black"
+          onClick={() => handleLike()}>
           👍{comment.likes}
         </span>
       </div>

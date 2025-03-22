@@ -1,5 +1,4 @@
 import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
-import { Tables } from "@/types/supabase";
 
 export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement> {
   color?: "purple" | "gray";
@@ -13,10 +12,14 @@ export interface InputType extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
 }
 
-export type CommentType = Pick<
-  Tables<"comments">,
-  "id" | "nickname" | "content" | "likes" | "created_at"
->;
+export type CommentType = {
+  id: number;
+  nickname: string;
+  content: string;
+  likes: number;
+  liked: boolean;
+  created_at: string;
+};
 
 export interface CommentCardType {
   comment: CommentType;

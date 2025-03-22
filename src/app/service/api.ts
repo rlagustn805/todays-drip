@@ -152,3 +152,24 @@ export async function deleteComment(id: number, password: string) {
 
   return { success: true, message: data.message };
 }
+
+// 댓글 좋아요 토글 (IP 기준 중복 방지
+export async function toggleLike(commentId: number) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments/${commentId}/like`,
+    {
+      method: "POST",
+      headers: {
+        "x-forwarded-for": "192.168.0.123",
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    return { success: false, message: data.message || "좋아요 처리 실패" };
+  }
+
+  return { success: true, message: data.message, liked: data.liked };
+}
