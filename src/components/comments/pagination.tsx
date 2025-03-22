@@ -18,7 +18,7 @@ export default function Pagination({
       </Button>
 
       <span className="px-4 py-2 font-bold">
-        페이지 {page} / {totalPages + 1}
+        페이지 {page} / {totalPages}
       </span>
 
       <Button

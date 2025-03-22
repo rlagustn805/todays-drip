@@ -17,7 +17,7 @@ export type CommentType = {
   nickname: string;
   content: string;
   likes: number;
-  liked: boolean;
+  // liked: boolean;
   created_at: string;
 };
 

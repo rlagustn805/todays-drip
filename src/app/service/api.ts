@@ -36,8 +36,13 @@ export async function getComments(
       }
     );
 
-    const { data, totalCount } = await res.json();
+    const raw = await res.json();
 
+    if (type === "top3") {
+      return { success: true, data: raw };
+    }
+
+    const { data, totalCount } = raw;
     if (!res.ok) {
       return { success: false, message: data.message || "댓글 조회 실패" };
     }

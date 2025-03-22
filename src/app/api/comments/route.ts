@@ -18,7 +18,9 @@ export async function GET(req: Request) {
       .from("comments")
       .select("id, nickname, content, likes, created_at")
       .eq("photo_id", photoId)
+      .gt("likes", 0)
       .order("likes", { ascending: false })
+      .order("created_at", { ascending: false })
       .limit(3);
 
     if (error) {
