@@ -1,7 +1,7 @@
 import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
 
 export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement> {
-  color?: "purple" | "gray";
+  color?: "purple" | "gray" | "transparency" | "black";
   className?: string;
   children: ReactNode;
 }
@@ -17,7 +17,7 @@ export type CommentType = {
   nickname: string;
   content: string;
   likes: number;
-  // liked: boolean;
+  liked?: boolean;
   created_at: string;
 };
 
@@ -25,6 +25,7 @@ export interface CommentCardType {
   comment: CommentType;
   onDelete: (id: number) => void;
   onUpdate: (id: number, content: string) => void;
+  bg?: string;
 }
 
 export interface PaginationType {

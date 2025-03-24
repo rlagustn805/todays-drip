@@ -12,9 +12,35 @@ export async function GET(req: Request) {
     return NextResponse.json({ message: "photoId 필요" }, { status: 400 });
   }
 
+  const userIp =
+    // req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
+    "192.168.0.123";
+
+  console.log(userIp);
+
   // 1️⃣ 좋아요 순위 상위 3개 댓글 가져오기
+  // if (searchParams.get("type") === "top3") {
+  //   const { data, error } = await supabase
+  //     .from("comments")
+  //     .select("id, nickname, content, likes, created_at")
+  //     .eq("photo_id", photoId)
+  //     .gt("likes", 0)
+  //     .order("likes", { ascending: false })
+  //     .order("created_at", { ascending: false })
+  //     .limit(3);
+
+  //   if (error) {
+  //     return NextResponse.json(
+  //       { message: "좋아요 순위 조회 실패" },
+  //       { status: 500 }
+  //     );
+  //   }
+
+  //   return NextResponse.json(data);
+  // }
+
   if (searchParams.get("type") === "top3") {
-    const { data, error } = await supabase
+    const { data: topComments, error } = await supabase
       .from("comments")
       .select("id, nickname, content, likes, created_at")
       .eq("photo_id", photoId)
@@ -30,7 +56,21 @@ export async function GET(req: Request) {
       );
     }
 
-    return NextResponse.json(data);
+    // top3 댓글에 대해 liked 상태도 조회
+    const { data: likedData } = await supabase
+      .from("likes")
+      .select("comment_id")
+      .eq("user_ip", userIp)
+      .eq("liked", true);
+
+    const likedIds = likedData?.map((item) => item.comment_id) ?? [];
+
+    const commentsWithLiked = topComments.map((comment) => ({
+      ...comment,
+      liked: likedIds.includes(comment.id),
+    }));
+
+    return NextResponse.json(commentsWithLiked);
   }
 
   const { count, error: countError } = await supabase
@@ -46,7 +86,7 @@ export async function GET(req: Request) {
   }
 
   // 2️⃣ 최신순 댓글 가져오기 (페이지네이션)
-  const { data, error } = await supabase
+  const { data: comments, error } = await supabase
     .from("comments")
     .select("id, nickname, content, likes, created_at")
     .eq("photo_id", photoId)
@@ -57,7 +97,20 @@ export async function GET(req: Request) {
     return NextResponse.json({ message: "댓글 조회 실패" }, { status: 500 });
   }
 
-  return NextResponse.json({ data, totalCount: count });
+  const { data: likedData } = await supabase
+    .from("likes")
+    .select("comment_id")
+    .eq("user_ip", userIp)
+    .eq("liked", true);
+
+  const likedIds = likedData?.map((item) => item.comment_id) ?? [];
+
+  const commentsWithLiked = comments.map((comment) => ({
+    ...comment,
+    liked: likedIds.includes(comment.id),
+  }));
+
+  return NextResponse.json({ data: commentsWithLiked, totalCount: count });
 }
 
 export async function POST(req: Request) {

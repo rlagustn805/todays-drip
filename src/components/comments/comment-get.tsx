@@ -5,6 +5,8 @@ import { getComments } from "@/app/service/api";
 import Pagination from "./pagination";
 import { CommentType } from "@/types/types";
 import CommentCard from "./comment-card";
+import CommentRank from "./comment-rank";
+import CommentPost from "./comment-post";
 
 export default function CommentGet({ photoId }: { photoId: string }) {
   const [comments, setComments] = useState<CommentType[]>([]);
@@ -23,7 +25,7 @@ export default function CommentGet({ photoId }: { photoId: string }) {
       if (res.success) {
         setComments(res.data || []);
         setTotalCount(res.totalCount);
-        setTotalPages(Math.ceil((res.totalCount || 0) / pageSize));
+        setTotalPages(Math.ceil((res.totalCount || 1) / pageSize));
       } else {
         console.error(res.message);
       }
@@ -52,40 +54,34 @@ export default function CommentGet({ photoId }: { photoId: string }) {
 
   return (
     <div>
-      <p className="font-bold text-lg">댓글 {totalCount}개</p>
-      {topComments.length > 0 && (
-        <div className="mb-6">
-          <p className="font-bold text-lg mb-2 text-amber-300">
-            🔥 좋아요 TOP 3
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-white">
-            {topComments.map((comment) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <CommentRank
+          topComments={topComments}
+          onDelete={handleDelete}
+          onUpdate={handleUpdate}
+        />
+
+        <div className="md:col-span-2 rounded-lg border border-gray-300 p-4">
+          <p className="font-bold text-lg mb-2">💬 실시간 댓글 {totalCount}</p>
+          <div className="space-y-4">
+            {comments.map((comment) => (
               <CommentCard
-                key={`top-${comment.id}`}
+                key={comment.id}
                 comment={comment}
                 onDelete={handleDelete}
                 onUpdate={handleUpdate}
               />
             ))}
           </div>
-        </div>
-      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-white">
-        {comments.map((comment) => (
-          <CommentCard
-            key={comment.id}
-            comment={comment}
-            onDelete={handleDelete}
-            onUpdate={handleUpdate}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
           />
-        ))}
+          <CommentPost />
+        </div>
       </div>
-      <Pagination
-        page={page}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
     </div>
   );
 }

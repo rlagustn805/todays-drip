@@ -6,7 +6,7 @@ import { getToday } from "@/utils/getToday";
 export default function CommentsContainer() {
   const today = getToday();
   return (
-    <div className="w-full min-h-96 border border-purple-200 flex flex-col gap-5">
+    <div className="">
       <ToastContainer
         position="top-center"
         limit={3}
@@ -15,7 +15,6 @@ export default function CommentsContainer() {
         toastClassName="font-bold text-sm border shadow-lg"
       />
       <CommentGet photoId={today} />
-      <CommentPost />
     </div>
   );
 }

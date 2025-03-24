@@ -3,12 +3,12 @@ import Button from "./common/button";
 
 export default function MenuBar() {
   return (
-    <div className="flex gap-5 border border-purple-200 p-2 rounded-lg">
+    <div className="flex justify-center items-center gap-5 p-2 rounded-lg">
       <Link href="history">
-        <Button>지난 드립왕🏆</Button>
+        <Button color="transparency">지난 드립왕🏆</Button>
       </Link>
       <Link href="/">
-        <Button>이용 안내</Button>
+        <Button color="transparency">이용 안내</Button>
       </Link>
     </div>
   );

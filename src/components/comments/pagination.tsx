@@ -9,7 +9,7 @@ export default function Pagination({
   onPageChange,
 }: PaginationType) {
   return (
-    <div className="flex justify-center gap-4 mt-4">
+    <div className="flex justify-center gap-4 my-8">
       <Button
         color="gray"
         onClick={() => onPageChange(page - 1)}

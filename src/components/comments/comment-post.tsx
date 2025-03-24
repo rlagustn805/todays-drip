@@ -34,26 +34,29 @@ export default function CommentPost() {
   return (
     <div>
       <div className="flex flex-col w-full gap-3">
-        <p className="text-lg font-bold m-auto">드립 남기기</p>
-        <Input
-          placeholder="닉네임 (12자 이내)"
-          maxLength={12}
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          required
-        />
-        <Input
-          type="password"
-          placeholder="비밀번호 입력 (15자 이내)"
-          maxLength={15}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="flex flex-col w-full gap-3 md:flex-row md:gap-6">
+          <Input
+            className="flex-1"
+            placeholder="닉네임 (12자 이내)"
+            maxLength={12}
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            required
+          />
+          <Input
+            className="flex-1"
+            type="password"
+            placeholder="비밀번호 입력 (15자 이내)"
+            maxLength={15}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
 
         <textarea
           className="resize-none w-full min-h-36 border boder-black p-2 rounded-lg"
-          placeholder="드립을 입력해주세요. (40자 이내)"
+          placeholder="드립을 입력해주세요...   (40자 이내)"
           maxLength={40}
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -61,10 +64,11 @@ export default function CommentPost() {
         />
       </div>
       <Button
+        color="black"
         className="float-right mt-3 text-sm"
         onClick={() => addHandleComment()}
         disabled={loading}>
-        {loading ? "등록 중..." : "등록하기"}
+        {loading ? "등록 중..." : "댓글 등록"}
       </Button>
     </div>
   );

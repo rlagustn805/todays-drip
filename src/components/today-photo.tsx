@@ -7,13 +7,12 @@ export default async function TodayPhoto() {
   return (
     <div>
       {photo ? (
-        <div className="relative w-full h-96 rounded-lg">
+        <div className="relative w-full max-w-3xl aspect-[16/9] rounded-lg m-auto">
           <Image
             src={photo.url}
             alt="오늘의 짤"
-            layout="fill"
-            objectFit="contain"
-            className="rounded-lg shadow-lg"
+            fill
+            className="object-cover rounded-lg"
             priority
           />
         </div>

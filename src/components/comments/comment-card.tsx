@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { CommentCardType } from "@/types/types";
 import {
   deleteComment,
@@ -15,11 +16,25 @@ export default function CommentCard({
   comment,
   onDelete,
   onUpdate,
+  bg = "",
 }: CommentCardType) {
-  const [mode, setMode] = useState<"read" | "edit" | "auth">("read");
+  const [mode, setMode] = useState<"read" | "edit" | "auth" | "delete">("read");
+  const [verifyAction, setVerifyAction] = useState<"edit" | "delete">("edit");
+
   const [inputPassword, setInputPassword] = useState("");
   const [editContent, setEditContent] = useState(comment.content);
   const [likes, setLikes] = useState(comment.likes);
+  const [liked, setLiked] = useState(comment.liked);
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    if (mode === "edit" && textAreaRef.current) {
+      const textarea = textAreaRef.current;
+      textarea.focus();
+      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      textarea.scrollTop = textarea.scrollHeight;
+    }
+  }, [mode]);
 
   const handleVerify = async (action: "edit" | "delete") => {
     const res = await verifyPassword(comment.id, inputPassword);
@@ -32,6 +47,7 @@ export default function CommentCard({
     if (action === "edit") {
       setMode("edit");
     } else if (action === "delete") {
+      setMode("delete");
       const del = await deleteComment(comment.id, inputPassword);
 
       if (del.success) {
@@ -57,10 +73,8 @@ export default function CommentCard({
   const handleLike = async () => {
     const res = await toggleLike(comment.id);
     if (res.success) {
-      toast.success(res.message);
       setLikes((prev) => (res.liked ? prev + 1 : Math.max(prev - 1, 0)));
-    } else {
-      toast.error(res.message);
+      setLiked(res.liked);
     }
   };
 
@@ -68,94 +82,140 @@ export default function CommentCard({
 
   if (mode === "auth") {
     actionArea = (
-      <div className="flex gap-2">
-        <Input
-          type="password"
-          placeholder="비밀번호 입력"
-          value={inputPassword}
-          onChange={(e) => setInputPassword(e.target.value)}
-        />
-        <span
-          className="cursor-pointer hover:underline"
-          role="none"
-          onClick={() => handleVerify("edit")}>
-          수정
-        </span>
-        <span
-          className="cursor-pointer hover:underline"
-          role="none"
-          onClick={() => handleVerify("delete")}>
-          삭제
-        </span>
+      <div className="bg-gray-200/30 p-2 rounded-lg flex flex-col gap-2">
+        <span>비밀번호 확인</span>
+        <div className="flex gap-3 items-center">
+          <Input
+            type="password"
+            placeholder="비밀번호 입력"
+            value={inputPassword}
+            onChange={(e) => setInputPassword(e.target.value)}
+            className="flex-1"
+          />
+          <div>
+            <span
+              className="px-4 py-2 mr-2 bg-black rounded-lg text-white cursor-pointer"
+              role="none"
+              onClick={() => handleVerify(verifyAction)}>
+              확인
+            </span>
+            <span
+              className="px-4 py-2 bg-white rounded-lg cursor-pointer"
+              role="none"
+              onClick={() => setMode("read")}>
+              취소
+            </span>
+          </div>
+        </div>
       </div>
     );
   } else if (mode === "edit") {
     actionArea = (
-      <div className="flex gap-2">
+      <div className="flex gap-2 justify-end">
         <span
-          className="cursor-pointer hover:underline"
+          className="px-4 py-2 mr-2 bg-black rounded-lg text-white cursor-pointer"
           role="none"
           onClick={() => handleUpdate()}>
           저장
         </span>
         <span
-          className="cursor-pointer hover:underline"
+          className="px-4 py-2 bg-white rounded-lg cursor-pointer"
           role="none"
           onClick={() => setMode("read")}>
           취소
         </span>
       </div>
     );
-  } else {
+  } else if (mode === "delete") {
     actionArea = (
       <div className="flex gap-3">
         <span
-          className="cursor-pointer hover:underline"
+          className="px-4 py-2 mr-2 bg-black rounded-lg text-white cursor-pointer"
           role="none"
-          onClick={() => setMode("auth")}>
-          수정
+          onClick={async () => {
+            const del = await deleteComment(comment.id, inputPassword);
+            if (del.success) {
+              toast.success(del.message);
+              onDelete(comment.id);
+            } else {
+              toast.error(del.message);
+            }
+          }}>
+          삭제
         </span>
         <span
-          className="cursor-pointer hover:underline"
+          className="px-4 py-2 bg-white rounded-lg cursor-pointer"
           role="none"
-          onClick={() => setMode("auth")}>
-          삭제
+          onClick={() => setMode("read")}>
+          취소
         </span>
       </div>
     );
   }
 
   return (
-    <div
-      key={comment.id}
-      className="bg-purple-400 rounded-lg p-2 flex flex-col gap-1.5">
-      <div className="text-sm flex justify-between items-center">
-        <span>{comment.nickname}</span>
-        <span
-          role="none"
-          className="px-1 py-0.5 bg-amber-50 rounded-lg cursor-pointer text-black"
-          onClick={() => handleLike()}>
-          👍{comment.likes}
-        </span>
-      </div>
-
-      {mode === "edit" ? (
-        <textarea
-          className="min-h-24 bg-amber-50 p-2 rounded text-black"
-          value={editContent}
-          onChange={(e) => setEditContent(e.target.value)}
-        />
-      ) : (
-        <div className="min-h-24 bg-amber-50 p-2 rounded text-black">
-          {comment.content}
+    <div key={comment.id} className={`${bg} p-2 rounded-lg`}>
+      <div className="flex flex-col gap-1">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <span>{comment.nickname}</span>
+            <span className="text-xs">
+              {comment.created_at
+                ?.split("T")[1]
+                .split(":")
+                .slice(0, 2)
+                .join(":")}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span
+              className="text-gray-500 text-xs cursor-pointer hover:text-black"
+              role="none"
+              onClick={() => {
+                setVerifyAction("edit");
+                setMode("auth");
+              }}>
+              수정
+            </span>
+            <span
+              className="text-gray-500 text-xs cursor-pointer hover:text-black"
+              role="none"
+              onClick={() => {
+                setVerifyAction("delete");
+                setMode("auth");
+              }}>
+              삭제
+            </span>
+          </div>
         </div>
-      )}
-
-      <div className="text-sm flex justify-between">
-        <span>
-          {comment.created_at?.split("T")[1].split(":").slice(0, 2).join(":")}
-        </span>
-        {actionArea}
+        {mode === "edit" ? (
+          <textarea
+            ref={textAreaRef}
+            className="resize-none focu"
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+            required
+          />
+        ) : (
+          <div className="">{comment.content}</div>
+        )}
+        <div className="text-sm flex items-center gap-2">
+          <span onClick={() => handleLike()} className="cursor-pointer">
+            {liked ? (
+              <div className="flex gap-2 items-center">
+                <GoHeartFill color="red" />
+                <span>좋아요 취소</span>
+              </div>
+            ) : (
+              <div className="flex gap-2 items-center">
+                <GoHeart />
+                <span>좋아요</span>
+              </div>
+            )}
+          </span>
+          <span>{likes}</span>
+        </div>
+        <div className="text-sm">{actionArea}</div>
       </div>
     </div>
   );

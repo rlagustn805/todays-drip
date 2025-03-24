@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="kr">
       <body className={pretendard.className}>
-        <div className="mx-5 md:mx-20 lg:mx-40 bg-white min-h-screen p-2 flex flex-col gap-5">
+        <div className="w-full max-w-[1400px] mx-auto px-4 py-8 min-h-screen flex flex-col gap-5">
           <Banner />
           <main>{children}</main>
         </div>

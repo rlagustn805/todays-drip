@@ -9,12 +9,15 @@ export default async function Home() {
   return (
     <div className="flex flex-col gap-5">
       <MenuBar />
-      <div className="text-lg font-bold bg-purple-400 p-2 text-white rounded-lg text-center">
-        오늘의 드립왕을 도전해보세요!
-        <p>매일 오전 9시에 업데이트가 됩니다.</p>
-        <p>{today}일, 오늘의 짤</p>
+      <div className="rounded-lg border border-gray-300">
+        <div className="p-4">
+          <div className="flex justify-between items-center mb-8">
+            <span className="text-xl font-semibold">오늘의 짤</span>
+            <span className="text-sm text-gray-500">{today}</span>
+          </div>
+          <TodayPhoto />
+        </div>
       </div>
-      <TodayPhoto />
 
       <CommentsContainer />
     </div>
