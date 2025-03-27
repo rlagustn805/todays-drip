@@ -1,7 +1,7 @@
 import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
 
 export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement> {
-  color?: "purple" | "gray" | "transparency" | "black";
+  color?: "purple" | "gray" | "transparency" | "black" | "none";
   className?: string;
   children: ReactNode;
 }

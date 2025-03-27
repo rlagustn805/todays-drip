@@ -66,7 +66,7 @@ export default function CommentGet({ photoId }: { photoId: string }) {
         <div className="md:col-span-2 rounded-lg border border-gray-300 p-4">
           <div className="flex items-center gap-2 mb-2">
             <FaRegCommentDots className="text-lg" />
-            <span className="font-bold text-lg">실시간 댓글</span>
+            <span className="font-bold text-lg">실시간 댓글 {totalCount}</span>
           </div>
           {totalCount! > 0 || totalCount === null ? (
             <div className="space-y-4">

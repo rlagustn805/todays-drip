@@ -4,6 +4,9 @@ import Button from "./common/button";
 export default function MenuBar() {
   return (
     <div className="flex justify-center items-center gap-5 p-2 rounded-lg">
+      <Link href="/">
+        <Button color="transparency">홈으로</Button>
+      </Link>
       <Link href="history">
         <Button color="transparency">지난 드립왕🏆</Button>
       </Link>
