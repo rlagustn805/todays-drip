@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FaRegCommentDots } from "react-icons/fa";
 import { getComments } from "@/app/service/api";
 import Pagination from "./pagination";
 import { CommentType } from "@/types/types";
 import CommentCard from "./comment-card";
 import CommentRank from "./comment-rank";
 import CommentPost from "./comment-post";
+import Warning from "../common/warning";
 
 export default function CommentGet({ photoId }: { photoId: string }) {
   const [comments, setComments] = useState<CommentType[]>([]);
@@ -62,17 +64,26 @@ export default function CommentGet({ photoId }: { photoId: string }) {
         />
 
         <div className="md:col-span-2 rounded-lg border border-gray-300 p-4">
-          <p className="font-bold text-lg mb-2">💬 실시간 댓글 {totalCount}</p>
-          <div className="space-y-4">
-            {comments.map((comment) => (
-              <CommentCard
-                key={comment.id}
-                comment={comment}
-                onDelete={handleDelete}
-                onUpdate={handleUpdate}
-              />
-            ))}
+          <div className="flex items-center gap-2 mb-2">
+            <FaRegCommentDots className="text-lg" />
+            <span className="font-bold text-lg">실시간 댓글</span>
           </div>
+          {totalCount! > 0 || totalCount === null ? (
+            <div className="space-y-4">
+              {comments.map((comment) => (
+                <CommentCard
+                  key={comment.id}
+                  comment={comment}
+                  onDelete={handleDelete}
+                  onUpdate={handleUpdate}
+                />
+              ))}
+            </div>
+          ) : (
+            <Warning
+              notice={`현재 드립이 없어요 ! \n여러분의 드립력을 뽐내주세요 :)`}
+            />
+          )}
 
           <Pagination
             page={page}

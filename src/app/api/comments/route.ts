@@ -16,8 +16,6 @@ export async function GET(req: Request) {
     // req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
     "192.168.0.123";
 
-  console.log(userIp);
-
   // 1️⃣ 좋아요 순위 상위 3개 댓글 가져오기
   // if (searchParams.get("type") === "top3") {
   //   const { data, error } = await supabase

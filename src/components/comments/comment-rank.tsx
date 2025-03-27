@@ -1,6 +1,7 @@
 import { GoHeartFill } from "react-icons/go";
 import { CommentType } from "@/types/types";
 import CommentCard from "./comment-card";
+import Warning from "../common/warning";
 
 type Props = {
   topComments: CommentType[];
@@ -15,12 +16,12 @@ export default function CommentRank({
 }: Props) {
   return (
     <div className="rounded-lg border border-gray-300 p-4">
-      {topComments.length > 0 ? (
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <GoHeartFill color="red" className="inline text-lg" />
-            <span className="font-bold- text-lg">인기 댓글</span>
-          </div>
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-2">
+          <GoHeartFill color="red" className="text-lg" />
+          <span className="font-bold text-lg">인기 댓글</span>
+        </div>
+        {topComments.length > 0 ? (
           <div className="space-y-4">
             {topComments.map((comment) => (
               <CommentCard
@@ -32,10 +33,10 @@ export default function CommentRank({
               />
             ))}
           </div>
-        </div>
-      ) : (
-        <div>인기 댓글 도전 - 임시</div>
-      )}
+        ) : (
+          <Warning notice="현재 인기 드립이 없어요 ! 도전해보세요 :)" />
+        )}
+      </div>
     </div>
   );
 }

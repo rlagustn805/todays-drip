@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { FaRegCommentDots } from "react-icons/fa";
+
 import Input from "../common/input";
 import Button from "../common/button";
 import { getToday } from "@/utils/getToday";
@@ -68,7 +70,13 @@ export default function CommentPost() {
         className="float-right mt-3 text-sm"
         onClick={() => addHandleComment()}
         disabled={loading}>
-        {loading ? "등록 중..." : "댓글 등록"}
+        {loading ? (
+          "등록 중..."
+        ) : (
+          <div className="flex items-center gap-2">
+            <FaRegCommentDots /> 댓글 등록
+          </div>
+        )}
       </Button>
     </div>
   );

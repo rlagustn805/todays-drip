@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <div className="w-full border border-gray-300 py-10">
+    <div className="w-full border border-gray-300 p-10">
       <div className="max-w-[1400px] mx-auto grid grid-cols-1 gap-3 md:grid-cols-3">
         <div className="flex flex-col">
           <span className="text-lg mb-3">오늘의 드립</span>

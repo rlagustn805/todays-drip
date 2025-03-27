@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getTodayPhoto } from "@/app/service/api";
+import Warning from "./common/warning";
 
 export default async function TodayPhoto() {
   const photo = await getTodayPhoto();
@@ -17,7 +18,7 @@ export default async function TodayPhoto() {
           />
         </div>
       ) : (
-        <p>오늘의 짤은 준비중이에요!</p>
+        <Warning notice="오늘의 짤을 준비중이에요 !" />
       )}
     </div>
   );
