@@ -12,18 +12,54 @@ export async function getTodayPhoto() {
 }
 
 // 댓글 조회하기
-export async function getComments(
-  photoId: string,
-  page: number = 1,
-  type?: "top3"
-) {
+// export async function getComments(
+//   photoId: string,
+//   page: number = 1,
+//   type?: "top3"
+// ) {
+//   if (!photoId) {
+//     return { success: false, message: "photoId 필요" };
+//   }
+
+//   const queryParams = new URLSearchParams({ photoId, page: page.toString() });
+
+//   if (type) queryParams.append("type", type);
+
+//   try {
+//     const res = await fetch(
+//       `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments?${queryParams.toString()}`,
+//       {
+//         method: "GET",
+//         headers: {
+//           "content-type": "application/json",
+//         },
+//       }
+//     );
+
+//     const raw = await res.json();
+
+//     if (type === "top3") {
+//       return { success: true, data: raw };
+//     }
+
+//     const { data, totalCount } = raw;
+//     if (!res.ok) {
+//       return { success: false, message: data.message || "댓글 조회 실패" };
+//     }
+
+//     return { success: true, data, totalCount };
+//   } catch (e) {
+//     return { success: false, message: "네트워크 에러가 발생하였습니다." };
+//   }
+// }
+
+// 댓글 조회 (인기 + 최신)
+export async function getComments(photoId: string, page: number = 1) {
   if (!photoId) {
     return { success: false, message: "photoId 필요" };
   }
 
   const queryParams = new URLSearchParams({ photoId, page: page.toString() });
-
-  if (type) queryParams.append("type", type);
 
   try {
     const res = await fetch(
@@ -38,16 +74,18 @@ export async function getComments(
 
     const raw = await res.json();
 
-    if (type === "top3") {
-      return { success: true, data: raw };
-    }
-
-    const { data, totalCount } = raw;
     if (!res.ok) {
-      return { success: false, message: data.message || "댓글 조회 실패" };
+      return { success: false, message: raw.message || "댓글 조회 실패" };
     }
 
-    return { success: true, data, totalCount };
+    const { topComments, recentComments, totalCount } = raw;
+
+    return {
+      success: true,
+      topComments,
+      recentComments,
+      totalCount,
+    };
   } catch (e) {
     return { success: false, message: "네트워크 에러가 발생하였습니다." };
   }

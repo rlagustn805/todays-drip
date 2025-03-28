@@ -22,18 +22,15 @@ export default function CommentGet({ photoId }: { photoId: string }) {
   useEffect(() => {
     async function fetchComments() {
       const res = await getComments(photoId, page);
-      const top3 = await getComments(photoId, 1, "top3");
 
+      console.log(res);
       if (res.success) {
-        setComments(res.data || []);
+        setComments(res.recentComments || []);
+        setTopComments(res.topComments);
         setTotalCount(res.totalCount);
         setTotalPages(Math.ceil((res.totalCount || 1) / pageSize));
       } else {
         console.error(res.message);
-      }
-
-      if (top3.success) {
-        setTopComments(top3.data || []);
       }
     }
 
@@ -66,7 +63,7 @@ export default function CommentGet({ photoId }: { photoId: string }) {
         <div className="md:col-span-2 rounded-lg border border-gray-300 p-4">
           <div className="flex items-center gap-2 mb-2">
             <FaRegCommentDots className="text-lg" />
-            <span className="font-bold text-lg">실시간 댓글 {totalCount}</span>
+            <span className="font-bold text-lg">실시간 드립 {totalCount}</span>
           </div>
           {totalCount! > 0 || totalCount === null ? (
             <div className="space-y-4">

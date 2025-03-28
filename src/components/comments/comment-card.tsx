@@ -83,7 +83,9 @@ export default function CommentCard({
   if (mode === "auth") {
     actionArea = (
       <div className="bg-gray-200/30 p-2 rounded-lg flex flex-col gap-2">
-        <span>비밀번호 확인</span>
+        <span>
+          비밀번호 확인 - {verifyAction === "edit" ? "댓글 수정" : "댓글 삭제"}
+        </span>
         <div className="flex gap-3 items-center">
           <Input
             type="password"

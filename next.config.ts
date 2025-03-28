@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       "media3.giphy.com",
       "media4.giphy.com",
       "giphy.com",
+      "developers.kakao.com",
     ],
   },
 };

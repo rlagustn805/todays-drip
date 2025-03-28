@@ -74,7 +74,7 @@ export default function CommentPost() {
           "등록 중..."
         ) : (
           <div className="flex items-center gap-2">
-            <FaRegCommentDots /> 댓글 등록
+            <FaRegCommentDots /> 드립 등록
           </div>
         )}
       </Button>

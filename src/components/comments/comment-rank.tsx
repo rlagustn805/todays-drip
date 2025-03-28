@@ -14,23 +14,28 @@ export default function CommentRank({
   onDelete,
   onUpdate,
 }: Props) {
+  const medals = ["🥇", "🥈", "🥉"];
+
   return (
     <div className="rounded-lg border border-gray-300 p-4">
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
           <GoHeartFill color="red" className="text-lg" />
-          <span className="font-bold text-lg">인기 댓글</span>
+          <span className="font-bold text-lg">인기 드립</span>
         </div>
         {topComments.length > 0 ? (
           <div className="space-y-4">
-            {topComments.map((comment) => (
-              <CommentCard
-                key={`top-${comment.id}`}
-                comment={comment}
-                onDelete={onDelete}
-                onUpdate={onUpdate}
-                bg="bg-gray-200/30"
-              />
+            {topComments.map((comment, index) => (
+              <div key={comment.id}>
+                <span className="text-xl">{medals[index]}</span>
+                <CommentCard
+                  key={`top-${comment.id}`}
+                  comment={comment}
+                  onDelete={onDelete}
+                  onUpdate={onUpdate}
+                  bg="bg-gray-200/30"
+                />
+              </div>
             ))}
           </div>
         ) : (

@@ -1,4 +1,5 @@
 import CommentsContainer from "@/components/comments/comments-container";
+import KakaoShareBtn from "@/components/kakao-share-btn";
 import TodayPhoto from "@/components/today-photo";
 import { getToday } from "@/utils/getToday";
 
@@ -14,9 +15,11 @@ export default async function Home() {
             <span className="text-sm text-gray-500">{today}</span>
           </div>
           <TodayPhoto />
+          <div className="float-right mt-4 my-2">
+            <KakaoShareBtn />
+          </div>
         </div>
       </div>
-
       <CommentsContainer />
     </div>
   );

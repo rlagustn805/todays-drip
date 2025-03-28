@@ -1,5 +1,4 @@
 import { ToastContainer } from "react-toastify";
-import CommentPost from "./comment-post";
 import CommentGet from "./comment-get";
 import { getToday } from "@/utils/getToday";
 
