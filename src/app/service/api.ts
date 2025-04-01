@@ -2,8 +2,12 @@ import { TablesInsert } from "@/types/supabase";
 
 // 오늘의 짤 가져오기
 export async function getTodayPhoto() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/photo`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/photo`, {
+    next: { tags: ["today-and-history"] },
+    cache: "force-cache",
+  });
 
+  console.log("사진 가져옴");
   if (!res.ok) {
     return null;
   }
@@ -69,6 +73,7 @@ export async function getComments(photoId: string, page: number = 1) {
         headers: {
           "content-type": "application/json",
         },
+        cache: "no-store",
       }
     );
 
@@ -78,13 +83,16 @@ export async function getComments(photoId: string, page: number = 1) {
       return { success: false, message: raw.message || "댓글 조회 실패" };
     }
 
-    const { topComments, recentComments, totalCount } = raw;
+    const { topComments, recentComments, totalCount, totalPages, currentPage } =
+      raw;
 
     return {
       success: true,
       topComments,
       recentComments,
+      currentPage,
       totalCount,
+      totalPages,
     };
   } catch (e) {
     return { success: false, message: "네트워크 에러가 발생하였습니다." };
@@ -153,17 +161,13 @@ export async function verifyPassword(id: number, password: string) {
 }
 
 // 댓글 수정하기
-export async function updateComment(
-  id: number,
-  content: string,
-  password: string
-) {
+export async function updateComment(id: number, content: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments/${id}`,
     {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password, content }),
+      body: JSON.stringify({ content }),
     }
   );
 
@@ -177,13 +181,12 @@ export async function updateComment(
 }
 
 // 댓글 삭제하기
-export async function deleteComment(id: number, password: string) {
+export async function deleteComment(id: number) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments/${id}`,
     {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
     }
   );
 
@@ -225,7 +228,9 @@ export async function getTopTenDrip() {
     headers: {
       "content-type": "application/json",
     },
+    next: { tags: ["today-and-history"] },
   });
+  console.log("지난 드립왕 갱신되었음");
 
   const data = await res.json();
 

@@ -18,7 +18,7 @@ const banners = [
     src: "/title/mobile.png",
     width: 720,
     height: 300,
-    className: "block sm:hidden",
+    className: "block md:hidden",
   },
 ];
 

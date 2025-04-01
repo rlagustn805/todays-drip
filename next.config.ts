@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
       "developers.kakao.com",
     ],
   },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
 };
 
 export default nextConfig;

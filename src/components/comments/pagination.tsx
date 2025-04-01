@@ -1,56 +1,69 @@
 "use client";
 
-import { PaginationType } from "@/types/types";
+import { useRouter, useSearchParams } from "next/navigation";
 import Button from "../common/button";
 
-export default function Pagination({
-  page,
+export default function PaginationClient({
+  currentPage,
   totalPages,
-  onPageChange,
-}: PaginationType) {
+}: {
+  currentPage: number;
+  totalPages: number;
+}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const pagePerGroup = 3;
-  const currentGroup = Math.floor((page - 1) / pagePerGroup);
+  const safeTotalPages = Math.max(1, totalPages);
+  const safeCurrentPage = Math.max(1, currentPage);
+  const currentGroup = Math.floor((safeCurrentPage - 1) / pagePerGroup);
   const startPage = currentGroup * pagePerGroup + 1;
-  const endPage = Math.min(startPage + pagePerGroup - 1, totalPages);
-
-  const handlePrevGroup = () => {
-    const prevGroupPage = Math.max(1, startPage - pagePerGroup);
-    onPageChange(prevGroupPage);
-  };
-
-  const handleNextGroup = () => {
-    const nextGroupPage = Math.min(totalPages, startPage + pagePerGroup);
-    onPageChange(nextGroupPage);
-  };
+  const endPage = Math.min(startPage + pagePerGroup - 1, safeTotalPages);
 
   const pageNumbers = [];
   for (let i = startPage; i <= endPage; i += 1) {
     pageNumbers.push(i);
   }
 
+  const goToPage = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", page.toString());
+    router.push(`/?${params.toString()}`, { scroll: false });
+
+    setTimeout(() => {
+      const target = document.getElementById("comment-section");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 0);
+  };
+
   return (
     <div className="flex justify-center gap-4 my-8">
-      <Button color="gray" onClick={handlePrevGroup} disabled={page === 1}>
+      <Button
+        color="black"
+        onClick={() => goToPage(Math.max(1, startPage - pagePerGroup))}
+        disabled={safeCurrentPage === startPage}>
         ◀ 이전
       </Button>
 
-      {pageNumbers.map((pageNumber) => (
+      {pageNumbers.map((pageNum) => (
         <Button
           color="none"
-          key={pageNumber}
-          onClick={() => onPageChange(pageNumber)}
-          className={`px-3 py-1 rounded-md font-medium ${
-            pageNumber === page
+          key={pageNum}
+          onClick={() => goToPage(pageNum)}
+          className={`px-3 py-1 rounded-md ${
+            pageNum === safeCurrentPage
               ? "bg-black text-white"
               : "bg-gray-200 text-gray-700"
           }`}>
-          {pageNumber}
+          {pageNum}
         </Button>
       ))}
+
       <Button
-        color="gray"
-        onClick={handleNextGroup}
-        disabled={page >= totalPages}>
+        color="black"
+        onClick={() => goToPage(Math.min(totalPages, startPage + pagePerGroup))}
+        disabled={safeCurrentPage === endPage}>
         다음 ▶
       </Button>
     </div>

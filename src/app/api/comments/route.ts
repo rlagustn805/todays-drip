@@ -147,10 +147,14 @@ export async function GET(req: Request) {
       liked: likedIds.includes(comment.id),
     })) ?? [];
 
+  const totalPages = Math.ceil((count || 0) / pageSize);
+
   return NextResponse.json({
     topComments: top3,
     recentComments: recent,
     totalCount: count || 0,
+    currentPage: page,
+    totalPages: totalPages,
   });
 }
 

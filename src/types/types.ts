@@ -1,7 +1,7 @@
 import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
 
 export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement> {
-  color?: "purple" | "gray" | "transparency" | "black" | "none";
+  color?: "purple" | "gray" | "transparency" | "black" | "none" | "red";
   className?: string;
   children: ReactNode;
 }
@@ -12,20 +12,28 @@ export interface InputType extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
 }
 
-export type CommentType = {
+export interface CommentsHandleType {
+  id: number;
+  mode?: string;
+  handleMode: (mode: string) => void;
+}
+
+export interface CommentsType {
   id: number;
   nickname: string;
   content: string;
   likes: number;
-  liked?: boolean;
+  liked: boolean;
   created_at: string;
-};
+}
 
-export interface CommentCardType {
-  comment: CommentType;
-  onDelete: (id: number) => void;
-  onUpdate: (id: number, content: string) => void;
-  bg?: string;
+export interface TodayCommentsType {
+  topComments?: CommentsType[];
+  recentComments?: CommentsType[];
+  success?: boolean;
+  currentPage?: number;
+  totalCount?: number;
+  totalPages?: number;
 }
 
 export interface PaginationType {

@@ -34,7 +34,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={pretendard.className}>
-        <div className="w-full max-w-[1400px] mx-auto px-4 py-8 min-h-screen flex flex-col gap-5">
+        <div className="w-full max-w-[1400px] mx-auto px-4 py-6 min-h-screen flex flex-col gap-5">
           <Banner />
           <MenuBar />
           <main>{children}</main>

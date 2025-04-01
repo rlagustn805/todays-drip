@@ -1,13 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { supabase } from "@/app/lib/supabase";
 
 export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   const { password } = await req.json();
 
+  const { id } = await context.params;
   if (!password) {
     return NextResponse.json(
       {
@@ -22,7 +23,7 @@ export async function POST(
   const { data, error } = await supabase
     .from("comments")
     .select("password_hash")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !data) {

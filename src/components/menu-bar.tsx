@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Button from "./common/button";
+import KakaoShareBtn from "./kakao-share-btn";
 
 export default function MenuBar() {
   return (
-    <div className="flex justify-center items-center gap-5 p-2 rounded-lg">
+    <div className="flex justify-center items-center gap-3 rounded-lg">
       <Link href="/">
         <Button color="transparency">홈으로</Button>
       </Link>
@@ -13,6 +14,9 @@ export default function MenuBar() {
       <Link href="/">
         <Button color="transparency">이용 안내</Button>
       </Link>
+      <Button color="transparency">
+        <KakaoShareBtn />
+      </Button>
     </div>
   );
 }

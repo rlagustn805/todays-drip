@@ -41,6 +41,7 @@
         "tsx": "never"
       }
     ],
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/require-default-props": "off"
   }
 }

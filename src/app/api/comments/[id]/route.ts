@@ -1,16 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/app/lib/supabase";
 
 export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   const { content } = await req.json();
+  const { id } = await context.params;
 
   const { error } = await supabase
     .from("comments")
     .update({ content })
-    .eq("id", params.id);
+    .eq("id", id);
 
   if (error) {
     return NextResponse.json(
@@ -23,13 +24,12 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { error } = await supabase
-    .from("comments")
-    .delete()
-    .eq("id", params.id);
+  const { id } = await context.params;
+
+  const { error } = await supabase.from("comments").delete().eq("id", id);
 
   if (error) {
     return NextResponse.json(

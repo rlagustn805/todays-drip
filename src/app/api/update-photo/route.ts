@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { supabase } from "@/app/lib/supabase";
 import { getToday } from "@/utils/getToday";
 
@@ -41,6 +42,7 @@ export async function POST() {
 
     if (error) throw error;
 
+    revalidateTag("today-and-history");
     return NextResponse.json({
       message: "오늘의 GIF 저장 성공!",
       url: randomGif,
