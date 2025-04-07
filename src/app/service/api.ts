@@ -4,57 +4,27 @@ import { TablesInsert } from "@/types/supabase";
 export async function getTodayPhoto() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/photo`, {
     next: { tags: ["today-and-history"] },
-    cache: "force-cache",
   });
 
-  console.log("사진 가져옴");
   if (!res.ok) {
     return null;
   }
+  console.log(`사진 가져옴 : ${new Date().toISOString()}`);
 
   return res.json();
 }
 
-// 댓글 조회하기
-// export async function getComments(
-//   photoId: string,
-//   page: number = 1,
-//   type?: "top3"
-// ) {
-//   if (!photoId) {
-//     return { success: false, message: "photoId 필요" };
+// utils/api.ts 등
+// export async function getTodayPhoto() {
+//   const res = await fetch("/api/photo");
+
+//   console.log("사진 가져옴");
+
+//   if (!res.ok) {
+//     throw new Error("사진을 불러오지 못했습니다.");
 //   }
 
-//   const queryParams = new URLSearchParams({ photoId, page: page.toString() });
-
-//   if (type) queryParams.append("type", type);
-
-//   try {
-//     const res = await fetch(
-//       `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments?${queryParams.toString()}`,
-//       {
-//         method: "GET",
-//         headers: {
-//           "content-type": "application/json",
-//         },
-//       }
-//     );
-
-//     const raw = await res.json();
-
-//     if (type === "top3") {
-//       return { success: true, data: raw };
-//     }
-
-//     const { data, totalCount } = raw;
-//     if (!res.ok) {
-//       return { success: false, message: data.message || "댓글 조회 실패" };
-//     }
-
-//     return { success: true, data, totalCount };
-//   } catch (e) {
-//     return { success: false, message: "네트워크 에러가 발생하였습니다." };
-//   }
+//   return res.json();
 // }
 
 // 댓글 조회 (인기 + 최신)
@@ -73,9 +43,15 @@ export async function getComments(photoId: string, page: number = 1) {
         headers: {
           "content-type": "application/json",
         },
-        cache: "no-store",
+        next: { revalidate: 3, tags: ["ssr-comments-update"] },
       }
     );
+
+    console.log("댓글 가져옴", {
+      photoId,
+      page,
+      now: new Date().toISOString(),
+    });
 
     const raw = await res.json();
 
@@ -106,9 +82,6 @@ export async function addComment(
   password: string,
   content: string
 ) {
-  if (!nickname || !password || !content)
-    return { success: false, message: "입력하지 않은 부분을 확인해주세요." };
-
   const newComment: TablesInsert<"comments"> = {
     photo_id: photoId,
     nickname,

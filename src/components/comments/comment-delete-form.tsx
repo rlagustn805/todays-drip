@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Button from "../common/button";
 import { deleteComment } from "@/app/service/api";
 import { CommentsHandleType } from "@/types/types";
+import { getToday } from "@/utils/getToday";
 
 export default function CommentDeleteForm({
   id,
@@ -10,18 +12,22 @@ export default function CommentDeleteForm({
 }: CommentsHandleType) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [commentId, setCommentId] = useState(id);
+  const photoId = getToday();
 
-  const onClickDelete = async () => {
-    const res = await deleteComment(commentId);
+  const queryClient = useQueryClient();
 
-    if (!res.success) {
-      toast.error(res.message);
-    }
+  const onClickDelete = useMutation({
+    mutationFn: () => deleteComment(commentId),
+    onSuccess: () => {
+      toast.success("삭제 완료");
+      handleMode("read");
 
-    toast.success(res.message);
-
-    handleMode("read");
-  };
+      queryClient.invalidateQueries({ queryKey: ["comments", photoId] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message);
+    },
+  });
 
   return (
     <div className="flex flex-col gap-4 p-4 border border-red-200 rounded-xl bg-red-50 shadow-sm">
@@ -32,7 +38,7 @@ export default function CommentDeleteForm({
       </p>
 
       <div className="flex justify-end gap-3">
-        <Button color="red" onClick={onClickDelete}>
+        <Button color="red" onClick={() => onClickDelete.mutate()}>
           삭제
         </Button>
         <Button color="black" onClick={() => handleMode("read")}>

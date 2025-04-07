@@ -3,35 +3,47 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { FaRegCommentDots } from "react-icons/fa";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Input from "../common/input";
 import Button from "../common/button";
 import { getToday } from "@/utils/getToday";
 import { addComment } from "@/app/service/api";
 
-export default function CommentPost() {
+export default function CommentPost({
+  handlePageChange,
+}: {
+  handlePageChange: (page: number) => void;
+}) {
   const [nickname, setNickname] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
   const photoId: string = getToday();
 
-  async function addHandleComment() {
-    setLoading(true); // 로딩 시작
+  const queryClient = useQueryClient();
 
-    const res = await addComment(photoId, nickname, password, content);
-
-    if (res.success) {
+  const addHandleComment = useMutation({
+    mutationFn: () => addComment(photoId, nickname, password, content),
+    onSuccess: () => {
       toast.success("등록 되었습니다!");
-      setNickname(""); // 입력 필드 초기화
+      setNickname("");
       setPassword("");
       setContent("");
-    } else {
-      toast.error(res.message);
+      queryClient.invalidateQueries({ queryKey: ["comments", photoId] });
+      handlePageChange(1);
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "댓글 등록에 실패했습니다.");
+    },
+  });
+
+  const handleOnClick = () => {
+    if (!nickname || !password || !content) {
+      toast.error("모든 항목을 입력해주세요.");
+      return;
     }
 
-    setLoading(false); // 로딩 종료
-  }
+    addHandleComment.mutate();
+  };
 
   return (
     <div>
@@ -68,9 +80,9 @@ export default function CommentPost() {
       <Button
         color="black"
         className="float-right mt-3 text-sm"
-        onClick={() => addHandleComment()}
-        disabled={loading}>
-        {loading ? (
+        onClick={handleOnClick}
+        disabled={addHandleComment.isPending}>
+        {addHandleComment.isPending ? (
           "등록 중..."
         ) : (
           <div className="flex items-center gap-2">

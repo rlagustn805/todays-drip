@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { GoHeartFill } from "react-icons/go";
 import { FaRegCommentDots } from "react-icons/fa";
 import { getComments } from "@/app/service/api";
@@ -8,29 +9,26 @@ import CommentList from "./comment-list";
 import Pagination from "./pagination";
 import CommentPost from "./comment-post";
 import TodayCommentSkeleton from "../skeleton/today-comment-skeleton";
-import { TodayCommentsType } from "@/types/types";
 
-export default function TodayCommentClient({
-  photoId,
-  page,
-}: {
-  photoId: string;
-  page: number;
-}) {
-  const [res, setRes] = useState<TodayCommentsType | null>(null);
-  const [loading, setLoading] = useState(false);
+export default function TodayCommentClient({ photoId }: { photoId: string }) {
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      const data = await getComments(photoId, page);
-      setRes(data);
-      setLoading(false);
-    };
-    fetch();
-  }, [photoId, page]);
+  const {
+    data: res,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["comments", photoId, page],
+    queryFn: () => getComments(photoId, page),
+    staleTime: 1000 * 10,
+  });
 
-  if (loading || !res) return <TodayCommentSkeleton />;
+  const handlePageChange = (page: number) => {
+    setPage(page);
+  };
+
+  if (isLoading) return <TodayCommentSkeleton />;
+  if (isError || !res?.success) return <div>{res?.message}</div>;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -51,10 +49,11 @@ export default function TodayCommentClient({
         </div>
         <CommentList commentList={res.recentComments ?? []} handle />
         <Pagination
-          currentPage={res.currentPage ?? 1}
+          currentPage={page}
           totalPages={res.totalPages ?? 1}
+          handlePageChange={handlePageChange}
         />
-        <CommentPost />
+        <CommentPost handlePageChange={handlePageChange} />
       </div>
     </div>
   );

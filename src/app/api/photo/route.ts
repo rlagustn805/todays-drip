@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/app/lib/supabase";
+import { getToday } from "@/utils/getToday";
 
 export async function GET() {
-  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+  const today = getToday(); // YYYY-MM-DD
   const { data, error } = await supabase
     .from("photos")
     .select("*")

@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+
 import bcrypt from "bcryptjs";
 import { supabase } from "@/app/lib/supabase";
 
@@ -154,7 +156,7 @@ export async function GET(req: Request) {
     recentComments: recent,
     totalCount: count || 0,
     currentPage: page,
-    totalPages: totalPages,
+    totalPages,
   });
 }
 
@@ -192,6 +194,7 @@ export async function POST(req: Request) {
         }
       );
     }
+    revalidateTag("ssr-comments-update");
 
     return NextResponse.json({ message: "댓글이 추가되었습니다." });
   } catch (e) {

@@ -41,7 +41,6 @@ export async function POST() {
       .upsert([{ id: today, url: randomGif, created_at: new Date() }]);
 
     if (error) throw error;
-
     revalidateTag("today-and-history");
     return NextResponse.json({
       message: "오늘의 GIF 저장 성공!",

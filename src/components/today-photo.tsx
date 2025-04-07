@@ -15,6 +15,7 @@ export default async function TodayPhoto() {
             fill
             className="object-cover rounded-lg"
             priority
+            unoptimized
           />
         </div>
       ) : (

@@ -4,6 +4,7 @@ import Script from "next/script";
 import Footer from "@/components/footer";
 import Banner from "@/components/banner";
 import MenuBar from "@/components/menu-bar";
+import ReactQueryProvider from "./providers/react-query-provider";
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -33,14 +34,16 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={pretendard.className}>
-        <div className="w-full max-w-[1400px] mx-auto px-4 py-6 min-h-screen flex flex-col gap-5">
-          <Banner />
-          <MenuBar />
-          <main>{children}</main>
-        </div>
-        <Footer />
-      </body>
+      <ReactQueryProvider>
+        <body className={pretendard.className}>
+          <div className="w-full max-w-[1400px] mx-auto px-4 py-6 min-h-screen flex flex-col gap-5">
+            <Banner />
+            <MenuBar />
+            <main>{children}</main>
+          </div>
+          <Footer />
+        </body>
+      </ReactQueryProvider>
     </html>
   );
 }
