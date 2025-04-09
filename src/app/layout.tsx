@@ -1,10 +1,19 @@
 import "./globals.css";
 import localFont from "next/font/local";
+import { Metadata } from "next";
 import Script from "next/script";
 import Footer from "@/components/footer";
 import Banner from "@/components/banner";
 import MenuBar from "@/components/menu-bar";
 import ReactQueryProvider from "./providers/react-query-provider";
+
+export const metadata: Metadata = {
+  title: "오늘의 드립",
+  description: "여려분의 맛있는 드립을 기다립니다.",
+  icons: {
+    icon: "/image/favicon.ico",
+  },
+};
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",

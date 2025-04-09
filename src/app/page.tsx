@@ -1,8 +1,19 @@
 import { Suspense } from "react";
+import { Metadata } from "next";
 import CommentsContainer from "@/components/comments/comments-container";
 import TodayPhoto from "@/components/today-photo";
 import TodayPhotoSkeleton from "@/components/skeleton/today-photo-skeleton";
 import { getToday } from "@/utils/getToday";
+
+export const metadata: Metadata = {
+  title: "오늘의 드립",
+  description: "여려분의 맛있는 드립을 기다립니다.",
+  openGraph: {
+    title: "오늘의 드립",
+    description: "여려분의 맛있는 드립을 기다립니다.",
+    images: ["/title/mobile.png"],
+  },
+};
 
 export default async function Home() {
   const today = getToday();

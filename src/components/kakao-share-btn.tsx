@@ -23,8 +23,8 @@ export default function KakaoShareBtn() {
       container: "#kakaotalk-sharing-btn",
       objectType: "feed",
       content: {
-        title: "오늘의 드립왕",
-        description: "여러분의 드립력을 보여주세요 !",
+        title: "오늘의 드립",
+        description: "여러분의 맛있는 드립을 기다립니다.",
         imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/title/mobile.png`,
         link: {
           mobileWebUrl: "http://localhost:3000",

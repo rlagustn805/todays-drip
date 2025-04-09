@@ -14,19 +14,6 @@ export async function getTodayPhoto() {
   return res.json();
 }
 
-// utils/api.ts 등
-// export async function getTodayPhoto() {
-//   const res = await fetch("/api/photo");
-
-//   console.log("사진 가져옴");
-
-//   if (!res.ok) {
-//     throw new Error("사진을 불러오지 못했습니다.");
-//   }
-
-//   return res.json();
-// }
-
 // 댓글 조회 (인기 + 최신)
 export async function getComments(photoId: string, page: number = 1) {
   if (!photoId) {

@@ -1,3 +1,15 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "오늘의 드립 | 이용 약관",
+  description: "오늘의 드립 이용 약관",
+  openGraph: {
+    title: "오늘의 드립 | 이용 약관",
+    description: "오늘의 드립 이용 약관",
+    images: ["/title/mobile.png"],
+  },
+};
+
 export default function Page() {
   return (
     <div className="mt-8 p-4 max-w-3xl mx-auto text-sm leading-relaxed bg-white rounded-lg">

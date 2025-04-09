@@ -1,7 +1,18 @@
+import { Metadata } from "next";
 import Faq from "@/components/guide/faq";
 import GuideContainer from "@/components/guide/guide-container";
 import GuideContent from "@/components/guide/guide-content";
 import GuideTitle from "@/components/guide/guide-title";
+
+export const metadata: Metadata = {
+  title: "오늘의 드립 | 이용 안내",
+  description: "오늘의 드립 이용 방법",
+  openGraph: {
+    title: "오늘의 드립 | 이용 안내",
+    description: "오늘의 드립 이용 방법",
+    images: ["/title/mobile.png"],
+  },
+};
 
 export default async function Page() {
   return (
