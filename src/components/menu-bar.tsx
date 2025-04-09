@@ -11,12 +11,10 @@ export default function MenuBar() {
       <Link href="history">
         <Button color="transparency">지난 드립왕🏆</Button>
       </Link>
-      <Link href="/">
+      <Link href="/guide">
         <Button color="transparency">이용 안내</Button>
       </Link>
-      <Button color="transparency">
-        <KakaoShareBtn />
-      </Button>
+      <KakaoShareBtn />
     </div>
   );
 }

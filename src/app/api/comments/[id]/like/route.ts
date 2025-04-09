@@ -1,18 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { supabase } from "@/app/lib/supabase";
-
-function getClientIp(req: NextRequest): string {
-  const ip = req.headers.get("x-forwarded-for") || "unknown";
-  return ip.split(",")[0].trim();
-}
 
 export async function POST(req: NextRequest) {
   const url = req.nextUrl;
   const id = url.pathname.split("/")[3];
   const commentId = Number(id);
-  const userIp = getClientIp(req);
 
-  if (!commentId || !userIp) {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("like_user_id")?.value;
+
+  if (!commentId || !userId) {
     return NextResponse.json(
       { message: "잘못된 요청입니다." },
       { status: 400 }
@@ -23,7 +21,7 @@ export async function POST(req: NextRequest) {
     .from("likes")
     .select("liked")
     .eq("comment_id", commentId)
-    .eq("user_ip", userIp)
+    .eq("user_id", userId)
     .maybeSingle();
 
   const newLikedState = !currentLike?.liked;
@@ -32,11 +30,11 @@ export async function POST(req: NextRequest) {
   await supabase.from("likes").upsert(
     {
       comment_id: commentId,
-      user_ip: userIp,
+      user_id: userId,
       liked: newLikedState,
       updated_at: new Date().toISOString(),
     },
-    { onConflict: "comment_id, user_ip" }
+    { onConflict: "comment_id, user_id" }
   );
 
   // 댓글 테이블 likes 수 반영

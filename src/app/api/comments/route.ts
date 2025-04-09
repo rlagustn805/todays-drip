@@ -1,96 +1,9 @@
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 
 import bcrypt from "bcryptjs";
 import { supabase } from "@/app/lib/supabase";
-
-// export async function GET(req: Request) {
-//   const { searchParams } = new URL(req.url);
-//   const photoId = searchParams.get("photoId");
-//   const page = parseInt(searchParams.get("page") || "1", 8);
-//   const pageSize = 8; // 한 페이지당 8개
-
-//   if (!photoId) {
-//     return NextResponse.json({ message: "photoId 필요" }, { status: 400 });
-//   }
-
-//   const userIp =
-//     // req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
-//     "192.168.0.123";
-
-//   if (searchParams.get("type") === "top3") {
-//     const { data: topComments, error } = await supabase
-//       .from("comments")
-//       .select("id, nickname, content, likes, created_at")
-//       .eq("photo_id", photoId)
-//       .gt("likes", 0)
-//       .order("likes", { ascending: false })
-//       .order("created_at", { ascending: false })
-//       .limit(3);
-
-//     if (error) {
-//       return NextResponse.json(
-//         { message: "좋아요 순위 조회 실패" },
-//         { status: 500 }
-//       );
-//     }
-
-//     // top3 댓글에 대해 liked 상태도 조회
-//     const { data: likedData } = await supabase
-//       .from("likes")
-//       .select("comment_id")
-//       .eq("user_ip", userIp)
-//       .eq("liked", true);
-
-//     const likedIds = likedData?.map((item) => item.comment_id) ?? [];
-
-//     const commentsWithLiked = topComments.map((comment) => ({
-//       ...comment,
-//       liked: likedIds.includes(comment.id),
-//     }));
-
-//     return NextResponse.json(commentsWithLiked);
-//   }
-
-//   const { count, error: countError } = await supabase
-//     .from("comments")
-//     .select("*", { count: "exact", head: true }) // ✅ 총 개수만 가져옴
-//     .eq("photo_id", photoId);
-
-//   if (countError) {
-//     return NextResponse.json(
-//       { message: "댓글 개수 조회 실패" },
-//       { status: 500 }
-//     );
-//   }
-
-//   // 2️⃣ 최신순 댓글 가져오기 (페이지네이션)
-//   const { data: comments, error } = await supabase
-//     .from("comments")
-//     .select("id, nickname, content, likes, created_at")
-//     .eq("photo_id", photoId)
-//     .order("created_at", { ascending: false })
-//     .range((page - 1) * pageSize, page * pageSize - 1);
-
-//   if (error) {
-//     return NextResponse.json({ message: "댓글 조회 실패" }, { status: 500 });
-//   }
-
-//   const { data: likedData } = await supabase
-//     .from("likes")
-//     .select("comment_id")
-//     .eq("user_ip", userIp)
-//     .eq("liked", true);
-
-//   const likedIds = likedData?.map((item) => item.comment_id) ?? [];
-
-//   const commentsWithLiked = comments.map((comment) => ({
-//     ...comment,
-//     liked: likedIds.includes(comment.id),
-//   }));
-
-//   return NextResponse.json({ data: commentsWithLiked, totalCount: count });
-// }
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -102,14 +15,13 @@ export async function GET(req: Request) {
     return NextResponse.json({ message: "photoId 필요" }, { status: 400 });
   }
 
-  const userIp =
-    // req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
-    "192.168.0.123";
+  const cookieStore = await cookies(); // ✅ 쿠키 접근
+  const userId = cookieStore.get("like_user_id")?.value;
 
   const { data: likedData } = await supabase
     .from("likes")
     .select("comment_id")
-    .eq("user_ip", userIp)
+    .eq("user_id", userId)
     .eq("liked", true);
 
   const likedIds = likedData?.map((item) => item.comment_id) ?? [];

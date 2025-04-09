@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Button from "../common/button";
@@ -10,7 +10,7 @@ export default function CommentEditForm({
   id,
   handleMode,
 }: CommentsHandleType) {
-  const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [commentId, setCommentId] = useState(id);
   const photoId = getToday();
@@ -18,7 +18,10 @@ export default function CommentEditForm({
   const queryClient = useQueryClient();
 
   const onClickEdit = useMutation({
-    mutationFn: () => updateComment(commentId, input),
+    mutationFn: () => {
+      const input = inputRef.current?.value.trim() || "";
+      return updateComment(commentId, input);
+    },
     onSuccess: () => {
       toast.success("수정 완료");
       handleMode("read");
@@ -33,9 +36,11 @@ export default function CommentEditForm({
   return (
     <div className="flex flex-col gap-3">
       <textarea
+        ref={inputRef}
         className="resize-none w-full min-h-32 border boder-black p-2 rounded-lg"
+        placeholder="드립을 입력해주세요... (40자 이내)"
+        maxLength={40}
         required
-        onChange={(e) => setInput(e.target.value)}
       />
       <div className="flex justify-end gap-2">
         <Button color="red" onClick={() => onClickEdit.mutate()}>

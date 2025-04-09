@@ -2,10 +2,7 @@ import { Suspense } from "react";
 import CommentsContainer from "@/components/comments/comments-container";
 import TodayPhoto from "@/components/today-photo";
 import TodayPhotoSkeleton from "@/components/skeleton/today-photo-skeleton";
-import UpdatePhotoButton from "@/components/updatePhoto";
 import { getToday } from "@/utils/getToday";
-
-// export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const today = getToday();
@@ -21,7 +18,6 @@ export default async function Home() {
           <Suspense fallback={<TodayPhotoSkeleton />}>
             <TodayPhoto />
           </Suspense>
-          <UpdatePhotoButton />
         </div>
       </div>
       <CommentsContainer today={today} />

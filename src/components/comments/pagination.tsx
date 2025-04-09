@@ -12,14 +12,16 @@ export default function PaginationClient({
   handlePageChange: (page: number) => void;
 }) {
   const pagePerGroup = 3;
+  const safeTotalPages = Math.max(1, totalPages); // ✅ 최소 1 보장
   const currentGroup = Math.floor((currentPage - 1) / pagePerGroup);
   const startPage = currentGroup * pagePerGroup + 1;
-  const endPage = Math.min(startPage + pagePerGroup - 1, totalPages);
+  const endPage = Math.min(startPage + pagePerGroup - 1, safeTotalPages);
 
   const pageNumbers = [];
   for (let i = startPage; i <= endPage; i += 1) {
     pageNumbers.push(i);
   }
+
   return (
     <div className="flex justify-center gap-4 my-8">
       <Button
@@ -45,8 +47,8 @@ export default function PaginationClient({
 
       <Button
         color="black"
-        onClick={() => handlePageChange(totalPages)}
-        disabled={currentPage === endPage}>
+        onClick={() => handlePageChange(safeTotalPages)}
+        disabled={currentPage === safeTotalPages}>
         마지막
       </Button>
     </div>

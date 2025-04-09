@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { GoHeartFill } from "react-icons/go";
 import { getTopTenDrip } from "@/app/service/api";
+import Warning from "./common/warning";
 
 type TopComment = {
   id: number;
@@ -18,6 +19,11 @@ type TopDripPhoto = {
 
 export default async function TopDripList() {
   const topTen: TopDripPhoto[] = (await getTopTenDrip()).data;
+
+  if (topTen.length === 0)
+    return (
+      <Warning notice={`지난 드립왕이 아직 안나왔어요 ! \n 도전해 보세요!`} />
+    );
 
   return (
     <div>

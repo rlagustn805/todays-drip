@@ -13,7 +13,7 @@ export default async function TodayPhoto() {
             src={photo.url}
             alt="오늘의 짤"
             fill
-            className="object-cover rounded-lg"
+            className="object-contain rounded-lg"
             priority
             unoptimized
           />

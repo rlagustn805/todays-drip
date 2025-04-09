@@ -2,7 +2,7 @@
 
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { GoHeart } from "react-icons/go";
+import { GoHeartFill } from "react-icons/go";
 import { FaRegCommentDots } from "react-icons/fa";
 
 function SectionHeader({
@@ -43,7 +43,10 @@ export default function TodayCommentSkeleton() {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* 인기드립 */}
       <div className="md:col-span-1 rounded-xl border border-gray-300 p-4 bg-white shadow-sm">
-        <SectionHeader icon={<GoHeart color="red" />} title="인기드립" />
+        <SectionHeader
+          icon={<GoHeartFill color="red" />}
+          title="인기드립 TOP 3"
+        />
         <CommentSkeletonList count={3} />
       </div>
 

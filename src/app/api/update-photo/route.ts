@@ -3,6 +3,10 @@ import { revalidateTag } from "next/cache";
 import { supabase } from "@/app/lib/supabase";
 import { getToday } from "@/utils/getToday";
 
+export const config = {
+  schedule: "0 0 * * *", // UTC 기준, KST 오전 9시는 UTC 0시!
+};
+
 // 사용할 테마 배열
 const gifThemes = ["funny", "reaction", "meme"];
 

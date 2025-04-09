@@ -21,7 +21,8 @@
     "react-icons": "^5.5.0",
     "react-loading-skeleton": "^3.5.0",
     "react-toastify": "^11.0.5",
-    "relative-time": "^1.0.0"
+    "relative-time": "^1.0.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -29,6 +30,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "eslint": "^8.2.0",

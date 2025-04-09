@@ -178,10 +178,7 @@ export async function toggleLike(commentId: number) {
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments/${commentId}/like`,
     {
       method: "POST",
-      // 임시
-      headers: {
-        "x-forwarded-for": "192.168.0.123",
-      },
+      credentials: "include",
     }
   );
 

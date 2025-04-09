@@ -1,3 +1,5 @@
+// /api/history/route.ts
+
 import { NextResponse } from "next/server";
 import { supabase } from "@/app/lib/supabase";
 import { getToday } from "@/utils/getToday";
@@ -6,7 +8,34 @@ export async function GET() {
   const today = getToday();
 
   try {
-    // 📌 최근 사진 50개 조회 (충분한 범위 확보)
+    // ✅ 오늘의 사진 ID
+    const { data: todayPhoto } = await supabase
+      .from("photos")
+      .select("id")
+      .eq("id", today)
+      .single();
+
+    // ✅ 오늘의 사진이 존재할 때만 정리 로직 실행
+    if (todayPhoto) {
+      const { data: topComment } = await supabase
+        .from("comments")
+        .select("id")
+        .eq("photo_id", todayPhoto.id)
+        .order("likes", { ascending: false })
+        .limit(1)
+        .single();
+
+      // 🔥 오늘 댓글 중 1등 외 모두 삭제
+      if (topComment?.id) {
+        await supabase
+          .from("comments")
+          .delete()
+          .eq("photo_id", todayPhoto.id)
+          .not("id", "eq", topComment.id);
+      }
+    }
+
+    // 🟡 이후: "오늘" 제외한 사진 목록 조회
     const { data: photos, error } = await supabase
       .from("photos")
       .select("id, url, created_at")
@@ -15,7 +44,6 @@ export async function GET() {
 
     if (error) throw error;
 
-    // 📌 오늘 날짜 제외
     const filteredPhotos = photos.filter(
       (photo) => !photo.created_at?.startsWith(today)
     );

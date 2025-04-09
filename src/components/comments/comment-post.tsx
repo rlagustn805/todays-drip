@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
 import { toast } from "react-toastify";
 import { FaRegCommentDots } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -14,20 +14,26 @@ export default function CommentPost({
 }: {
   handlePageChange: (page: number) => void;
 }) {
-  const [nickname, setNickname] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const nicknameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLTextAreaElement>(null);
   const photoId: string = getToday();
 
   const queryClient = useQueryClient();
 
   const addHandleComment = useMutation({
-    mutationFn: () => addComment(photoId, nickname, password, content),
+    mutationFn: () => {
+      const nickname = nicknameRef.current?.value.trim() || "";
+      const password = passwordRef.current?.value.trim() || "";
+      const content = contentRef.current?.value.trim() || "";
+
+      return addComment(photoId, nickname, password, content);
+    },
     onSuccess: () => {
       toast.success("등록 되었습니다!");
-      setNickname("");
-      setPassword("");
-      setContent("");
+      if (nicknameRef.current) nicknameRef.current.value = "";
+      if (passwordRef.current) passwordRef.current.value = "";
+      if (contentRef.current) contentRef.current.value = "";
       queryClient.invalidateQueries({ queryKey: ["comments", photoId] });
       handlePageChange(1);
     },
@@ -37,6 +43,10 @@ export default function CommentPost({
   });
 
   const handleOnClick = () => {
+    const nickname = nicknameRef.current?.value.trim();
+    const password = passwordRef.current?.value.trim();
+    const content = contentRef.current?.value.trim();
+
     if (!nickname || !password || !content) {
       toast.error("모든 항목을 입력해주세요.");
       return;
@@ -53,8 +63,7 @@ export default function CommentPost({
             className="flex-1"
             placeholder="닉네임 (12자 이내)"
             maxLength={12}
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            ref={nicknameRef}
             required
           />
           <Input
@@ -62,8 +71,7 @@ export default function CommentPost({
             type="password"
             placeholder="비밀번호 입력 (15자 이내)"
             maxLength={15}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordRef}
             required
           />
         </div>
@@ -72,8 +80,7 @@ export default function CommentPost({
           className="resize-none w-full min-h-36 border boder-black p-2 rounded-lg"
           placeholder="드립을 입력해주세요...   (40자 이내)"
           maxLength={40}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+          ref={contentRef}
           required
         />
       </div>
