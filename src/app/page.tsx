@@ -5,6 +5,8 @@ import TodayPhoto from "@/components/today-photo";
 import TodayPhotoSkeleton from "@/components/skeleton/today-photo-skeleton";
 import { getToday } from "@/utils/getToday";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "오늘의 드립",
   description: "여려분의 맛있는 드립을 기다립니다.",

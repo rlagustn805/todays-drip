@@ -9,7 +9,6 @@ export async function getTodayPhoto() {
   if (!res.ok) {
     return null;
   }
-  console.log(`사진 가져옴 : ${new Date().toISOString()}`);
 
   return res.json();
 }
@@ -33,12 +32,6 @@ export async function getComments(photoId: string, page: number = 1) {
         next: { revalidate: 3, tags: ["ssr-comments-update"] },
       }
     );
-
-    console.log("댓글 가져옴", {
-      photoId,
-      page,
-      now: new Date().toISOString(),
-    });
 
     const raw = await res.json();
 
@@ -187,7 +180,6 @@ export async function getTopTenDrip() {
     },
     next: { tags: ["today-and-history"] },
   });
-  console.log("지난 드립왕 갱신되었음");
 
   const data = await res.json();
 

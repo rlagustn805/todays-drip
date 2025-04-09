@@ -27,16 +27,16 @@ export default function KakaoShareBtn() {
         description: "여러분의 맛있는 드립을 기다립니다.",
         imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/title/mobile.png`,
         link: {
-          mobileWebUrl: "http://localhost:3000",
-          webUrl: "http://localhost:3000",
+          mobileWebUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+          webUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
         },
       },
       buttons: [
         {
           title: "드립력 보여주기",
           link: {
-            mobileWebUrl: "http://localhost:3000",
-            webUrl: "http://localhost:3000",
+            mobileWebUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+            webUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
           },
         },
       ],
