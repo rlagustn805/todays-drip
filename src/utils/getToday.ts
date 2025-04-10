@@ -14,3 +14,7 @@ export const getToday = () => {
 
   return now.format("YYYY-MM-DD");
 };
+
+export const getYesterday = () => {
+  return dayjs(getToday()).subtract(1, "day").format("YYYY-MM-DD");
+};

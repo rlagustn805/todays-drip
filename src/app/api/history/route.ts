@@ -2,40 +2,42 @@
 
 import { NextResponse } from "next/server";
 import { supabase } from "@/app/lib/supabase";
-import { getToday } from "@/utils/getToday";
+import { getToday, getYesterday } from "@/utils/getToday";
 
 export async function GET() {
   const today = getToday();
+  const dripKingDate = getYesterday();
 
   try {
-    // ✅ 오늘의 사진 ID
-    const { data: todayPhoto } = await supabase
+    // ✅ 전날의 사진 ID
+    const { data: yesterdayPhoto } = await supabase
       .from("photos")
       .select("id")
-      .eq("id", today)
+      .eq("id", dripKingDate)
       .single();
 
-    // ✅ 오늘의 사진이 존재할 때만 정리 로직 실행
-    if (todayPhoto) {
+    // ✅ 전날의 사진이 존재할 때만 정리 로직 실행
+    if (yesterdayPhoto) {
       const { data: topComment } = await supabase
         .from("comments")
         .select("id")
-        .eq("photo_id", todayPhoto.id)
+        .eq("photo_id", yesterdayPhoto.id)
         .order("likes", { ascending: false })
+        .order("created_at", { ascending: true })
         .limit(1)
         .single();
 
-      // 🔥 오늘 댓글 중 1등 외 모두 삭제
+      // 🔥 전날 댓글 중 1등 외 모두 삭제
       if (topComment?.id) {
         await supabase
           .from("comments")
           .delete()
-          .eq("photo_id", todayPhoto.id)
+          .eq("photo_id", yesterdayPhoto.id)
           .not("id", "eq", topComment.id);
       }
     }
 
-    // 🟡 이후: "오늘" 제외한 사진 목록 조회
+    // 🟡 이후: "오늘 (getToday)" 제외한 사진 목록 조회
     const { data: photos, error } = await supabase
       .from("photos")
       .select("id, url, created_at")
