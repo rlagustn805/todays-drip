@@ -10,7 +10,7 @@ export const config = {
 // 사용할 테마 배열
 const gifThemes = ["funny", "reaction", "meme"];
 
-export async function POST() {
+export async function GET() {
   try {
     const GIPHY_API_KEY = process.env.GIPHY_API_KEY!;
 
