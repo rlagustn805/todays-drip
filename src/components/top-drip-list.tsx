@@ -41,7 +41,6 @@ export default async function TopDripList() {
                 src={top.url}
                 fill
                 alt={top.id}
-                unoptimized
               />
             </div>
             <div className="p-3">

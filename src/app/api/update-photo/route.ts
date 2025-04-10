@@ -34,7 +34,7 @@ export async function GET() {
     // 4️⃣ 랜덤 GIF 1개 선택
     const randomGif =
       data.data[Math.floor(Math.random() * data.data.length)].images.original
-        .url;
+        .webp;
 
     // 5️⃣ Supabase에 저장할 데이터 생성
     const today = getToday(); // YYYY-MM-DD 형식
