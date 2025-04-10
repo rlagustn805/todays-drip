@@ -1,42 +1,17 @@
 import Image from "next/image";
-import Link from "next/link";
-
-const banners = [
-  {
-    src: "/title/pc.png",
-    width: 1920,
-    height: 600,
-    className: "hidden md:hidden lg:block",
-  },
-  {
-    src: "/title/tablet.png",
-    width: 1024,
-    height: 400,
-    className: "hidden md:block lg:hidden",
-  },
-  {
-    src: "/title/mobile.png",
-    width: 720,
-    height: 300,
-    className: "block md:hidden",
-  },
-];
 
 export default function Banner() {
   return (
     <div>
-      {banners.map((banner) => (
-        <Link href="/" key={banner.src}>
-          <Image
-            src={banner.src}
-            alt={banner.src}
-            width={banner.width}
-            height={banner.height}
-            className={banner.className}
-            priority
-          />
-        </Link>
-      ))}
+      <Image
+        src="/title/pc.png"
+        alt="오늘의 배너"
+        width={1920}
+        height={600}
+        priority
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 1024px, 1920px"
+        className="w-full h-auto"
+      />
     </div>
   );
 }
