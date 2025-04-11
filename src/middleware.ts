@@ -14,6 +14,9 @@ export function middleware(req: NextRequest) {
     res.cookies.set(cookieName, newId, {
       path: "/",
       maxAge: 60 * 60 * 24 * 365, // 1년
+      httpOnly: true, // JS 접근 차단
+      secure: true, // HTTPS에서만 전송
+      sameSite: "lax", // 크로스사이트 요청 보호
     });
   }
 
