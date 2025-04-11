@@ -23,7 +23,7 @@
 <br/>
 
 # 2. Project Purpose (프로젝트 목적)
-<img width="514" alt="Image" src="https://github.com/user-attachments/assets/9c5133a4-e286-43e1-a9d2-fc634cafa49a" /> <br/>
+<img width="514" alt="Image" src="https://github.com/user-attachments/assets/9c5133a4-e286-43e1-a9d2-fc634cafa49a" /> <br/><br/>
 꼬맨틀 (매일 하루 갱신되는 단어 맞추기 사이트) 사이트를 보고 영감이 생겨 제작하게 되었습니다 !<br/>
 다솜이 기숙사 룸메이트 웹서비스를 제작할 때 우리 학교 학생들의 범주에만 한정되었는데 이번엔 모든 사람들이 즐겨볼 수 있도록 큰 범위의 서비스를 만들고자 시작하였습니다. <br/>
 또한 프로젝트 특성 상 Next.js의 장점인 SSR과 ISR 등을 활용하기 좋은 기회라 생각하여 시작하였습니다.<br/>
@@ -97,27 +97,27 @@
 
 3-1) 서버 컴포넌트 / 클라이언트 분리 전략 <br/><br/>
 
-1-1) 첫번째 방법, 모든 컴포넌트에 ISR 적용 <br/>
-<img width="807" alt="image" src="https://github.com/user-attachments/assets/086c5b65-650b-4f8c-b67f-41f8e2af8466" /> <br/>
-<img width="611" alt="image" src="https://github.com/user-attachments/assets/bda2e400-b431-43b8-a295-70867fa3fb0c" /> <br/>
+1-1) 첫번째 방법, 모든 컴포넌트에 ISR 적용 <br/><br/>
+<img width="807" alt="image" src="https://github.com/user-attachments/assets/086c5b65-650b-4f8c-b67f-41f8e2af8466" /> <br/><br/>
+<img width="611" alt="image" src="https://github.com/user-attachments/assets/bda2e400-b431-43b8-a295-70867fa3fb0c" /> <br/><br/>
 처음에는 단순히 사용자가 빠르게 페이지에 접속하고 불필요한 api 요청 방지를 위해 모든 컴포넌트에 적용하였습니다. <br/>
 매일 오전 9시에 새로운 이미지 (오늘의 짤)과 지난 드립왕이 갱신되기 떄문에 update-photo api가 요청이 되면 다시 갱신되게끔 하였습니다. (On-demand ISR) <br/>
 실시간 및 인기 드립 같은 경우 (revalidate time을 5초, 댓글 등록, 수정, 삭제시 갱신)도 ISR로 적용하였습니다. <br/>
-이러한 방식의 문제점은 5초후 댓글이 갱신되면 오늘의 짤을 불러오는 api도 함께 요청되는 문제가 있었습니다. <br/>
+이러한 방식의 문제점은 5초후 댓글이 갱신되면 오늘의 짤을 불러오는 api도 함께 요청되는 문제가 있었습니다. <br/><br/>
 
-1-2) 두번째 방법, 오늘의 짤 / 지난 드립왕 (ISR 적용), 댓글 1페이지만 ISR 적용, 2페이지 부터는 클라이언트 컴포넌트로 변경 <br/>
-<img width="599" alt="image" src="https://github.com/user-attachments/assets/ae15ebaf-19c2-408c-9aa2-57dbfc4f0c2c" /> <br/>
+1-2) 두번째 방법, 오늘의 짤 / 지난 드립왕 (ISR 적용), 댓글 1페이지만 ISR 적용, 2페이지 부터는 클라이언트 컴포넌트로 변경 <br/><br/>
+<img width="599" alt="image" src="https://github.com/user-attachments/assets/ae15ebaf-19c2-408c-9aa2-57dbfc4f0c2c" /> <br/><br/>
 빠른 첫페이지 접속을 위해 댓글 목록 컴포넌트를 SSR, CSR 전용으로 2개로 나누었습니다. <br/>
 하지만 이 방시 또한 일정 시간 지난 후 (ISR) 댓글이 갱신되면 오늘의 짤을 불러오는 api도 함께 요청되는 문제가 있었습니다. <br/>
 
-1-3) 세번쨰 방법, 두번째 방법, 오늘의 짤 / 지난 드립왕 (ISR 적용), 댓글 페이지 모두 SSR 적용 <br/>
-<img width="818" alt="image" src="https://github.com/user-attachments/assets/6ecfacc4-2bec-4de5-b3ae-948d1bac6adf" /> <br/>
+1-3) 세번쨰 방법, 두번째 방법, 오늘의 짤 / 지난 드립왕 (ISR 적용), 댓글 페이지 모두 SSR 적용 <br/><br/>
+<img width="818" alt="image" src="https://github.com/user-attachments/assets/6ecfacc4-2bec-4de5-b3ae-948d1bac6adf" /> <br/><br/>
 위 두 방법이 의도댄 방법으로 안되어 댓글 컴포넌트 모두 SSR로 적용하였습니다. <br/>
 하지만 SSR 특성상 새로운 댓글이나, 좋아요 등을 새로고침을 해야지만 볼 수 있다는 걸 알게 되었습니다. <br/>
 실시간으로 댓글을 볼 수 있다는 점에서 UX적으로 불리하다는 생각이 들었습니다. <br/>
  
-1-4) 네번째 방법 최종 결정, 오늘의 짤 / 지난 드립왕 (ISR 적용), 댓글 페이지 CSR 적용 (+ tanstack query 캐싱전략) <br/>
-<img width="826" alt="image" src="https://github.com/user-attachments/assets/9d67d64f-065f-40a2-9fed-3584efbdeafa" /> <br/>
+1-4) 네번째 방법 최종 결정, 오늘의 짤 / 지난 드립왕 (ISR 적용), 댓글 페이지 CSR 적용 (+ tanstack query 캐싱전략) <br/><br/>
+<img width="826" alt="image" src="https://github.com/user-attachments/assets/9d67d64f-065f-40a2-9fed-3584efbdeafa" /> <br/><br/>
 댓글 컴포넌트를 SSR => CSR로 전환하였습니다. 이유는 댓글은 SEO 보다 실시간성으로 UX를 개선하는데 적합하다고 생각하였습니다. <br/>
 오늘의 짤, 지난 드립왕 같은 경우는 On-Demand ISR로 사진이 업데이트 될 때 갱신되게끔 수정하였습니다.  <br/>
 이때 vercel의 cron을 적용하였습니다. <br/>
@@ -127,10 +127,10 @@
 하지만 무조건적이 아닌 사용자의 입장을 고려하여 적절히 SSR, CSR을 나누어서 렌더링하는게 중요하다는 걸 알게 되었습니다.  <br/>
 <br/>
 2. 렌더링 최적화 <br/>
-- input의 컨텐츠들을 state로 관리하다 보니 필요없는 리렌더링이 이루어지는 걸 볼 수 있습니다. <br/>
-![1-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/5e28fc28-18d1-4efb-9070-95a3341d3170) <br/>
-- useRef를 이용하여 렌더링을 최적화 하였습니다. <br/>
-![2-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/02c156c3-64dd-4e89-a7b5-5eb25bf79838) <br/>
+- input의 컨텐츠들을 state로 관리하다 보니 필요없는 리렌더링이 이루어지는 걸 볼 수 있습니다. <br/><br/>
+![1-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/5e28fc28-18d1-4efb-9070-95a3341d3170) <br/><br/>
+- useRef를 이용하여 렌더링을 최적화 하였습니다. <br/><br/>
+![2-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/02c156c3-64dd-4e89-a7b5-5eb25bf79838) <br/><br/>
 <br/><br/>
 
 
@@ -147,7 +147,9 @@
 <br/>
    참고한 부분) <br/>
    유튜브 좋아요 방법 (좋아요는 회원제) <br/>
-   ![스크린샷 2025-04-11 173618](https://github.com/user-attachments/assets/634f6365-4656-40a8-a189-d50d21a69bd1) <br/>
+   <img width="195" alt="image" src="https://github.com/user-attachments/assets/8510421b-c04c-4dcf-b54b-45894959c42e" /> <br/><br/>
+
+
  
 <br/>
 <br/>
