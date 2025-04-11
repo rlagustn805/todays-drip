@@ -1,0 +1,9 @@
+{
+  "crons": [
+    {
+      "path": "/api/update-photo",
+      "schedule": "0 0 * * *",
+      "timezone": "Asia/Seoul"
+    }
+  ]
+}

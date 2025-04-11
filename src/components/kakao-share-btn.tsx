@@ -11,13 +11,11 @@ declare global {
 
 export default function KakaoShareBtn() {
   useEffect(() => {
-    if (window.Kakao && !window.Kakao.isInitialized()) {
+    if (!window.Kakao) return;
+
+    if (!window.Kakao.isInitialized()) {
       window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
     }
-  }, []);
-
-  const shareToKakao = () => {
-    if (!window.Kakao) return;
 
     window.Kakao.Share.createDefaultButton({
       container: "#kakaotalk-sharing-btn",
@@ -41,7 +39,7 @@ export default function KakaoShareBtn() {
         },
       ],
     });
-  };
+  }, []);
 
   return (
     <Image
@@ -49,8 +47,7 @@ export default function KakaoShareBtn() {
       alt="카카오 공유하기 버튼"
       width={30}
       height={30}
-      onClick={shareToKakao}
-      id="kakaotalk-sharing-btn"
+      id="kakaotalk-sharing-btn" // ✅ 이 ID를 기준으로 자동 연결됨
       className="cursor-pointer"
     />
   );

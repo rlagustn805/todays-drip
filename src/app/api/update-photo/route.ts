@@ -3,9 +3,7 @@ import { revalidateTag } from "next/cache";
 import { supabase } from "@/app/lib/supabase";
 import { getToday } from "@/utils/getToday";
 
-export const config = {
-  schedule: "0 0 * * *",
-};
+export const revalidate = 0;
 
 // 사용할 테마 배열
 const gifThemes = ["funny", "reaction", "meme"];

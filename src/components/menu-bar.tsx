@@ -9,7 +9,7 @@ export default function MenuBar() {
         <Button color="transparency">홈으로</Button>
       </Link>
       <Link href="history">
-        <Button color="transparency">지난 드립왕🏆</Button>
+        <Button color="transparency">지난 드립왕</Button>
       </Link>
       <Link href="/guide">
         <Button color="transparency">이용 안내</Button>
