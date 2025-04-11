@@ -2,6 +2,8 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { Metadata } from "next";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
+
 import Footer from "@/components/footer";
 import Banner from "@/components/banner";
 import MenuBar from "@/components/menu-bar";
@@ -43,6 +45,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
+      <Analytics />
       <ReactQueryProvider>
         <body className={pretendard.className}>
           <div className="w-full max-w-[1400px] mx-auto px-4 py-6 min-h-screen flex flex-col gap-5">
